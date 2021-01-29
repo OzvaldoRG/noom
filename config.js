@@ -875,41 +875,16 @@ if (isMedia) {
 			
 
         case 'play':
-            if (args.length == 0) return kill.reply(from, 'Lo uso incorretamente.', id)
-            axios.get(`https://arugaz.my.id/api/media/ytsearch?query=${body.slice(6)}`)
-            .then(async (res) => {
-				const pyre = res.data.result[0].uploadDate
-				if (pyre == '' || pyre == 'null' || pyre == null || pyre == undefined || pyre == 'undefined') {
-					var playre = 'Indefinido'
-				} else if (pyre.endsWith('years ago')) {
-                    var playre = pyre.replace('years ago', 'Anos atrás')
-				} else if (pyre.endsWith('hours ago')) {
-                    var playre = pyre.replace('hours ago', 'Horas atrás')
-				} else if (pyre.endsWith('minutes ago')) {
-                    var playre = pyre.replace('minutes ago', 'Minutos atrás')
-				} else if (pyre.endsWith('day ago')) {
-                    var playre = pyre.replace('day ago', 'Dia atrás')
-				} else if (pyre.endsWith('months ago')) {
-                    var playre = pyre.replace('months ago', 'Meses atrás')
-				} else if (pyre.endsWith('seconds ago')) {
-                    var playre = pyre.replace('seconds ago', 'Segundos atrás')
-				}
-				const asize = await axios.get(`http://st4rz.herokuapp.com/api/yta?url=http://youtu.be/${res.data.result[0].id}`)
-				const afsize = asize.data.filesize.replace(' MB', '')
-				console.log(afsize)
-				if (afsize >= 16.0 || asize.data.filesize.endsWith('GB')) {
-					kill.reply(from, `Lo sentimos, para evitar prohibiciones de WhatsApp, el límite de envío de audio es de 16 MB, y esto tiene ${asize.data.filesize}.`, id)
-				} else {
-					await kill.sendFileFromUrl(from, `${res.data.result[0].thumbnail}`, ``, `Titulo: ${res.data.result[0].title}\n\nDuracion: ${res.data.result[0].duration} segundos\n\nHace: ${playre}\n\nVisualizaciones: ${res.data.result[0].viewCount}\n\nEspero averlo echo bien, ahora solo espera que tu video se envie, NO UTILIZES ESTE COMANDO HASTA QUE EL PROCESO TERMINE!!`, id)
-					console.log(res.data.result[0].title)
-					axios.get(`http://st4rz.herokuapp.com/api/yta2?url=http://youtu.be/${res.data.result[0].id}`)
-					.then(async(rest) => {
-						var m3pa = rest.data.result
-						var m3ti = rest.data.title
-						await kill.sendFileFromUrl(from, m3pa, '', '', id)
-					})
-				}
-			})
+            if (!isUser) return reply(mess.only.daftarB)
+                reply(mess.wait)
+                play = body.slice(5)
+                anu = await fetchJson(`https://api.zeks.xyz/api/ytplaymp3?q=${play}&apikey=apivinz`)
+               if (anu.error) return reply(anu.error)
+                 infomp3 = `*Cancion Encontrada!!!*\nTitulo : ${anu.result.title}\nFonte : ${anu.result.source}\nTamanho : ${anu.result.size}\n\n*Espere, se esta enviando la cancion*`
+                buffer = await getBuffer(anu.result.thumbnail)
+                lagu = await getBuffer(anu.result.url_audio)
+                client.sendMessage(from, buffer, image, {quoted: mek, caption: infomp3})
+                client.sendMessage(from, lagu, audio, {mimetype: 'audio/mp4', filename: `${anu.title}.mp3`, quoted: mek})
             break
 			
 
