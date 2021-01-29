@@ -33,6 +33,7 @@ const { belle } = require('./lib/belle')
 const { termux } = require('./lib/termux')
 const bklist = JSON.parse(fs.readFileSync('./lib/blacklist.json'))
 const faki = JSON.parse(fs.readFileSync('./lib/fake.json'))
+const user = JSON.parse(fs.readFileSync('./database/json/user.json'))
 const atbk = JSON.parse(fs.readFileSync('./lib/anti.json'))
 const BrainlySearch = require('./lib/brainly')
 const { removeBackgroundFromImageBase64 } = require('remove.bg')
@@ -71,6 +72,7 @@ module.exports = kconfig = async (kill, message) => {
 		const chats = (type === 'chat') ? body : (type === 'image' || type === 'video') ? caption : ''
         const ownerNumber = '529984907794@c.us' // MUDE ISSO PARA O SEU NUMERO
         const isOwner = sender.id === ownerNumber
+        const isUser = user.includes(sender)
         global.pollfile = 'poll_Config_'+chat.id+'.json'
         global.voterslistfile = 'poll_voters_Config_'+chat.id+'.json'
 		global.client = kill
